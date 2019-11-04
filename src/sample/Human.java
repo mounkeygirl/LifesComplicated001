@@ -8,7 +8,8 @@ public class Human {
     private String name;
     private int level=1;
     private String defaultIntroduction;
-    private Relationship[][] Relationships= new Relationship[CHARACTERNAME.values().length][CHARACTERNAME.values().length];
+    private RelationshipMap Relationships = new RelationshipMap();
+    //private Relationship[][] Relationships= new Relationship[CHARACTERNAME.values().length][CHARACTERNAME.values().length];
     private Location currentLocation;
     //Enum Number will be useful to have on hand for reference
     private int enumLocation;
@@ -26,7 +27,7 @@ public class Human {
         defaultIntroduction=name+": Hello my name is "+name +" it is nice to meet you";
         //Create relationship with self. Currently no plan to, but might be an interesting feature,
         //No reason to stop program if called
-        Relationships[enumLocation][enumLocation]=new Relationship();
+        Relationships.createSelfRelationship(enumLocation);
     }
 
 
@@ -43,9 +44,10 @@ public class Human {
         this.defaultIntroduction = defaultIntroduction;
     }
 
-    public Relationship[][] getRelationships() {
+    public RelationshipMap getRelationships() {
         return Relationships;
     }
+
     //get/set single relationships
     public Relationship getRelationship(CHARACTERNAME charactername){
         if(charactername.ordinal()==enumLocation){
@@ -53,7 +55,8 @@ public class Human {
                     "Was this intentional?");
         }
 
-            return Relationships[enumLocation][charactername.ordinal()];
+            return Relationships.getSingleRelationship(enumLocation,charactername);
+
     }
 
     public Location getCurrentLocation() {
@@ -87,8 +90,6 @@ public class Human {
         // and give introductions
         if (relationship==null){
             output = checkIfFirstMeeting(charactername);
-
-
         } else if(charactername.ordinal()==enumLocation){
             greeting="Hello me.";
             output.addLine(greeting);
@@ -97,8 +98,6 @@ public class Human {
         }
 
         //save traverse option for gamedata implmentation
-//        output.traverse();
-        //testing
         return output;
 
     }
@@ -112,9 +111,7 @@ public class Human {
         // set 2 dim array in both directions,
         // and give introductions
         if (relationship==null){
-            relationship=new Relationship();
-            Relationships[enumLocation][charactername.ordinal()]=
-                    Relationships[charactername.ordinal()][enumLocation]=relationship;
+            Relationships.createRelationship(enumLocation,charactername);
 
             dialog.addLine(defaultIntroduction);
             dialog.addLine(charactername,"And my name is "+charactername.getName()+". It is nice to meet you.");
@@ -127,7 +124,7 @@ public class Human {
     }
 
     private Dialog checkSpecialDialog(CHARACTERNAME charactername){
-        Relationship relationship = Relationships[enumLocation][charactername.ordinal()];
+        Relationship relationship =Relationships.getSingleRelationship(enumLocation,charactername);
 
         if (!relationship.getCharacterSpecificConversation().isEmpty()){
             return relationship.dequeCharacterSpecificConversation();
