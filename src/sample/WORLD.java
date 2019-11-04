@@ -1,0 +1,6 @@
+package sample;
+
+public enum WORLD {
+    SHIELDSHOME_MAYSROOM, SHIELDSHOME_KITCHEN,
+    TENGUHILL
+}
