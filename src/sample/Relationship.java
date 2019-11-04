@@ -6,6 +6,7 @@ public class Relationship {
     //variables
     private int level=1;
     private ArrayList<Dialog> characterSpecificConversation=new ArrayList<>();
+    private boolean firstMeeting = true;
 
 
     //constructers
@@ -51,7 +52,15 @@ public class Relationship {
         return characterSpecificConversation;
     }
 
+    public boolean getFirstMeeting(){
+       return firstMeeting;
+    }
 
+    public void turnOffFirstMeeting(){
+       firstMeeting =false;
+    }
+
+    //manage dialog que
     public void addToBackOfCharacterSpecificConversation(Dialog dialog){
         characterSpecificConversation.add(dialog);
     }

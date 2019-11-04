@@ -161,12 +161,13 @@ public class GameData {
                 if (charactername.equals(item)){
                     optionEnum =CHARACTERNAME.values()[searchValue];
 
-                     return output=talkTo(optionEnum);
+                    //if I get a hit call the CHARACTERNAME version of talk to
+                    return output=talkTo(optionEnum);
 
                 }
                 searchValue++;
             }
-                //return error message if no option is found
+                // if I don't get a hit, return error message if no option is found
         output.traverse();
         return output;
     }

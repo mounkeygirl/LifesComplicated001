@@ -7,7 +7,11 @@ public class Human {
     //variables
     private String name;
     private int level=1;
+
+    //Introduction information
+    // instilized after name is decided.
     private String defaultIntroduction;
+
     //I want to make dialog system for each possible character so...
     //dialog can be of any length, but there are set relationships
     //so I think the best thing to do is make a seperate system
@@ -83,8 +87,13 @@ public class Human {
 
     //interact with world
     public Dialog greet(CHARACTERNAME charactername){
+        //call proper relationship
         Relationship relationship = getRelationship(charactername);
+
+        //String lines will either be added to this dialog class,
+        //or it will be overridded with a new dialog object
         Dialog output= new Dialog();
+
         String greeting = "Hello "+charactername.getName();
         //if there is no established relationship create a new one,
         // set 2 dim array in both directions,
@@ -108,19 +117,41 @@ public class Human {
         Relationship relationship = getRelationship(charactername);
         String greeting = "";
         Dialog dialog = new Dialog();
-        //if there is no established relationship create a new one,
-        // set 2 dim array in both directions,
-        // and give introductions
+
+
         if (relationship==null){
+            //if there is no established relationship create a new one,
+            // set 2 dim array in both directions,
             Relationships.createRelationship(enumLocation,charactername);
 
-            dialog.addLine(defaultIntroduction);
-            dialog.addLine(charactername,"And my name is "+charactername.getName()+". It is nice to meet you.");
+            //if no special meeting conditions, use the default introductions
+
+            addDefaultMeetingDialog(dialog, charactername);
+
+
+
+        } else if (relationship.getFirstMeeting()==true){
+            //turn this off so I don't get this again
+            relationship.turnOffFirstMeeting();
+            //check for special meeting conditions such as locations
+
+            //if no special meeting conditions, use the default introductions
+            addDefaultMeetingDialog(dialog, charactername);
 
         }
         //if relationship isn't null, will return blank
 
         return dialog;
+
+    }
+
+    private void addDefaultMeetingDialog(Dialog modifidedDialog, CHARACTERNAME respondingCharactername){
+
+        modifidedDialog.addLine(defaultIntroduction);
+        //and modify the response
+        //note: consider adding response to each character for added
+        String defaultIntroductionResponse="And my name is "+respondingCharactername.getName()+". It is nice to meet you.";
+        modifidedDialog.addLine(respondingCharactername,defaultIntroductionResponse);
 
     }
 
