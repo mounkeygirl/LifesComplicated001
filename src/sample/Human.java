@@ -8,14 +8,15 @@ public class Human {
     private String name;
     private int level=1;
     private String defaultIntroduction;
+    //I want to make dialog system for each possible character so...
+    //dialog can be of any length, but there are set relationships
+    //so I think the best thing to do is make a seperate system
     private RelationshipMap Relationships = new RelationshipMap();
     //private Relationship[][] Relationships= new Relationship[CHARACTERNAME.values().length][CHARACTERNAME.values().length];
     private Location currentLocation;
     //Enum Number will be useful to have on hand for reference
     private int enumLocation;
-    //I want to make dialog system for each possible character so...
-    //dialog can be of any length, but there are set relationships
-    //so I think the best thing to do is make a seperate system
+
 
 
 

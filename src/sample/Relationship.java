@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Relationship {
     //variables
-    private int level;
+    private int level=1;
     private ArrayList<Dialog> characterSpecificConversation=new ArrayList<>();
 
 
@@ -14,7 +14,21 @@ public class Relationship {
    }
 
    public Relationship(){
-        this.level = 1;
+
+   }
+
+   //if relationship initilized with a dialog, that is the first conversation
+   public Relationship(Dialog dialog){
+       characterSpecificConversation.add(dialog);
+   }
+
+   //might just want to have a two line exchange as first conversation, so I'll initlize that form
+   public Relationship(CHARACTERNAME charactername1, String string1, CHARACTERNAME charactername2, String string2){
+       Dialog dialog = new Dialog();
+       dialog.addLine(charactername1,string1);
+       dialog.addLine(charactername2,string2);
+       characterSpecificConversation.add(dialog);
+
    }
 
    //getters, setters, and basic calls
