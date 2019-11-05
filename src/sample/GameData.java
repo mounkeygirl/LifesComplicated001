@@ -5,6 +5,13 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class GameData {
+    //private class for internal use
+    private class MetaData{
+        //variables
+        String string;
+        int position;
+    }
+
     private enum EPISODELIST{
         TESTING
     }
@@ -15,7 +22,7 @@ public class GameData {
     private Episode[] episodeList = new Episode[EPISODELIST.values().length];
     private Episode episode;
     private String textOutput="testing";
-    private ArrayList<Option> tempOptionList=new ArrayList<>();
+    private static ArrayList<Option> tempOptionList=new ArrayList<>();
 
 
 
@@ -122,7 +129,7 @@ public class GameData {
         }
     }
 
-    public void addOptionToTempOptionList(OPTIONLIST option){
+    public static void addOptionToTempOptionList(OPTIONLIST option){
         tempOptionList.add(OPTIONLIST.getOption(option));
     }
 
@@ -226,26 +233,37 @@ public class GameData {
 
 
     private String whatCanIDo(){
-        String output="";
-        int optionNumber=0;
+
+        //I needed to update a multiple things after running a function,
+        //So i made a special metadata class
+        MetaData metaData = new MetaData();
+
+        String output=metaData.string="";
+        int optionNumber=metaData.position=0;
         //make sure to flush temp option list before filling it out again
         tempOptionList=new ArrayList<>();
         if(player.getCurrentLocation().isAnyoneHere()==true){
-            Option talkToSomeone = OPTIONLIST.getOption(OPTIONLIST.TALKTOSOMEONE);
-            addOptionToTempOptionList(OPTIONLIST.TALKTOSOMEONE);
-            output += optionNumber++ + ") "+ talkToSomeone.getName();
+            metaData=addOption(OPTIONLIST.TALKTOSOMEONE,metaData);
         }
 
 
-        //always add goback last
-        OPTIONLIST goBackEnum = OPTIONLIST.GOBACK;
-        addOptionToTempOptionList(goBackEnum);
-        Option goback = OPTIONLIST.getOption(goBackEnum);
-        output += "\n"+optionNumber++ + ") "+ goback.getName();
+        //always add goback after the if statments
+        metaData=addOption(OPTIONLIST.GOBACK,metaData);
+
+        //add quit to end
+        metaData=addOption(OPTIONLIST.QUITPROGRAM,metaData);
 
 
+        output = metaData.string;
         System.out.println(output);
         return output;
+    }
+
+    private MetaData addOption(OPTIONLIST newOptionEnum, MetaData metaData){
+        addOptionToTempOptionList(newOptionEnum);
+        Option newOption = OPTIONLIST.getOption(newOptionEnum);
+         metaData.string += "\n"+metaData.position++ + ") "+ newOption.getName();
+         return metaData;
     }
 
     public void goTo(WORLD location){

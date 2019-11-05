@@ -5,8 +5,12 @@ public class Test {
         GameData gameData = new GameData();
 
         gameData.lookAround();
-        gameData.selectAction();
 
+        while(true==true){
+
+            gameData.selectAction();
+
+        }
 
     }
 }

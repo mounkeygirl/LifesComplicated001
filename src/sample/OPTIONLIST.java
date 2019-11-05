@@ -3,7 +3,7 @@ package sample;
 import java.lang.reflect.Array;
 
 public enum OPTIONLIST {
-    TALKTOSOMEONE, GOBACK;
+    TALKTOSOMEONE, GOBACK, QUITPROGRAM;
 
     private static Option[] optionList = initilizeOptionList();
 
@@ -11,6 +11,7 @@ public enum OPTIONLIST {
         Option[] myNewList=new Option[OPTIONLIST.values().length];
         myNewList[TALKTOSOMEONE.ordinal()]=new Option("Talk to someone");
         myNewList[GOBACK.ordinal()]= new Option("Go Back");
+        myNewList[QUITPROGRAM.ordinal()]= new Option("Quit Program");
         return myNewList;
 
     }
