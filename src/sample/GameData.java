@@ -242,6 +242,11 @@ public class GameData {
         int optionNumber=metaData.position=0;
         //make sure to flush temp option list before filling it out again
         tempOptionList=new ArrayList<>();
+
+        // list out options
+        metaData=addOption(OPTIONLIST.LOOKAROUND,metaData);
+
+        //only add talk to someone if there are options present
         if(player.getCurrentLocation().isAnyoneHere()==true){
             metaData=addOption(OPTIONLIST.TALKTOSOMEONE,metaData);
         }
@@ -288,6 +293,12 @@ public class GameData {
                 break;
             case GOBACK:
                 System.out.println("I GO BACK NOWSSS!");
+                break;
+            case QUITPROGRAM:
+                System.exit(0);
+                break;
+            case LOOKAROUND:
+                lookAround();
                 break;
             default:
                 System.out.println("MY OPTION HAS NOT BEEN PROGRAMEDEDED!!!?!! ANNA! DO THE THING!!!");
