@@ -12,14 +12,12 @@ public class GameData {
         int position;
     }
 
-    private enum EPISODELIST{
-        TESTING
-    }
+
 
     private Human player;
     private Human[] characterList= new Human[CHARACTERNAME.values().length];
-    private Location[] world = new Location[WORLD.values().length];
-    private Episode[] episodeList = new Episode[EPISODELIST.values().length];
+    private Location[] world = WORLD.getWorld();
+    private Episode[] episodeList = EPISODELIST.getEpisodeList();
     private Episode episode;
     private String textOutput="testing";
     private static ArrayList<Option> tempOptionList=new ArrayList<>();
@@ -27,7 +25,7 @@ public class GameData {
 
 
     //Initiate Gamedata
-    public GameData(){
+    public GameData(EPISODELIST startingEpisode, CHARACTERNAME charactername){
         //add characters to world
         setCharacterToList(CHARACTERNAME.JINDRICH);
         setCharacterToList(CHARACTERNAME.NOEL);
@@ -35,22 +33,16 @@ public class GameData {
         setCharacterToList(CHARACTERNAME.MAY);
         setCharacterToList(CHARACTERNAME.ZEA);
         setCharacterToList(CHARACTERNAME.JAMES);
+
         //establish Player(Who is one of the characters)
-        player=getCharacter(CHARACTERNAME.MAY);
-
-
-        //add locations to the world
-        setLocationToWorld(WORLD.SHIELDSHOME_MAYSROOM, "May's Room");
-        setLocationToWorld(WORLD.SHIELDSHOME_KITCHEN, "Shields' Kitchen");
-
-        //Add episodes to episodeList[]
-        setEpisodeToList(EPISODELIST.TESTING,new Episode("Episode 1",getLocationFromWorld(WORLD.SHIELDSHOME_KITCHEN)));
-        Episode modEpisode = getEpisodeFromList(EPISODELIST.TESTING);
-        modEpisode.addCharacterToLocation(CHARACTERNAME.ZEA,WORLD.SHIELDSHOME_KITCHEN);
-        modEpisode.addCharacterToLocation(CHARACTERNAME.JAMES,WORLD.SHIELDSHOME_KITCHEN);
+        player=getCharacter(charactername);
 
         //establish starting episode
-        setUpEpisode(EPISODELIST.TESTING);
+        startEpisode(startingEpisode);
+    }
+
+    public GameData(){
+        new GameData(EPISODELIST.TESTING, CHARACTERNAME.MAY);
     }
 
 
@@ -75,26 +67,17 @@ public class GameData {
     }
 
 
-    private void setLocationToWorld(WORLD locationEnum, String stringName){
-        int number = locationEnum.ordinal();
-        world[number] = new Location(stringName);
+    public void setEpisode(EPISODELIST episodeEnum){
+        this.episode =episodeList[episodeEnum.ordinal()];
+
     }
 
-    private Location getLocationFromWorld(WORLD locationEnum){
-        return world[locationEnum.ordinal()];
+    public void setEpisode(Episode episode) {
+        this.episode = episode;
     }
 
-    private void setEpisodeToList(EPISODELIST episodeEnum, Episode episode){
-        int number = episodeEnum.ordinal();
-        episodeList[number] = episode;
-    }
-
-    private void setEpisodeToList(EPISODELIST episodeEnum, String name, Location location){
-        setEpisodeToList(episodeEnum, new Episode(name,location));
-    }
-
-    private Episode getEpisodeFromList(EPISODELIST episodeEnum){
-        return episodeList[episodeEnum.ordinal()];
+    public Episode getEpisode() {
+        return episode;
     }
 
     public String getTextOutput() {
@@ -102,31 +85,32 @@ public class GameData {
     }
 
     //setting up location
-    private void addPersonToLocation(CHARACTERNAME charactername, WORLD location){
+    public void addPersonToLocation(CHARACTERNAME charactername, WORLD location){
         //remove person from their last location
-        Location oldLocation=characterList[charactername.ordinal()].getCurrentLocation();
+        Human human = characterList[charactername.ordinal()];
+
+        if (human==null){
+            System.out.println("No such character: "+charactername.toString());
+        }
+
+        Location oldLocation=human.getCurrentLocation();
         if(oldLocation !=null){
             oldLocation.removePersonPreesent(characterList[charactername.ordinal()]);
         }
         //update episode data
-        world[location.ordinal()].addPersonPresent(characterList[charactername.ordinal()]);
+        Location newLocation = world[location.ordinal()];
+
+        if (newLocation == null){
+            System.out.println("No such Location object in WORLD enum that for "+location.toString());
+        } else {
+
+            newLocation.addPersonPresent(human);
+
+        }
 
         //update character data
         characterList[charactername.ordinal()].setCurrentLocation(world[location.ordinal()]);
 
-    }
-
-    public void setUpEpisode(EPISODELIST episodelistItem){
-        episode = getEpisodeFromList(episodelistItem);
-        player.setCurrentLocation(episode.getStartingLocation());
-        HashMap<CHARACTERNAME,WORLD> newLocations=episode.getNewCharacterLocations();
-
-        //retrieve character locations from episode details and update world locations
-        for(HashMap.Entry<CHARACTERNAME,WORLD> entry : newLocations.entrySet()) {
-            CHARACTERNAME charactername = entry.getKey();
-            WORLD location = entry.getValue();
-            addPersonToLocation(charactername,location);
-        }
     }
 
     public static void addOptionToTempOptionList(OPTIONLIST option){
@@ -341,6 +325,11 @@ public class GameData {
 
 
 
+
+    }
+
+    private void startEpisode(EPISODELIST episode){
+        EPISODELIST.startEpisode(episode,this);
 
     }
 

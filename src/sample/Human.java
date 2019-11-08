@@ -75,7 +75,12 @@ public class Human {
     //meta help
 
     public String whereAmI(){
-        String answer = currentLocation.whereAmI();
+        String answer ="";
+        if (currentLocation!=null){
+
+            answer= currentLocation.whereAmI();
+        }
+            answer = "Character: "+name+" has no location assigned";
         return answer;
     }
 
