@@ -9,13 +9,23 @@ public class Episode {
     private Location startingLocation;
     private String title;
     private boolean complete=false;
+    private Human mainCharacter;
     private HashMap<CHARACTERNAME, WORLD> newCharacterLocations = new HashMap<>();
 
+    //I need to set starting location, starting main character, and episode title.
+    //I Also need to make sure the main character is in the starting location
+    //Failure to set main character in starting location causes error
     ///constructor
-    public Episode(String title, Location startingLocation){
+    public Episode(String title, CHARACTERNAME mainCharacterEnum, WORLD startingLocation){
         this.title = title;
-        this.startingLocation = startingLocation;
+        this.startingLocation = WORLD.getLocationFromWorld(startingLocation);
+        this.mainCharacter =CHARACTERNAME.getCharacterFromWorld(mainCharacterEnum);
+
+        //update locations of character
+        EPISODELIST.addPersonToLocation(mainCharacterEnum,startingLocation);
+
     }
+
 
     //getters and setters
     public Location getStartingLocation() {
@@ -28,6 +38,10 @@ public class Episode {
 
     public boolean getComplete(){
         return complete;
+    }
+
+    public Human getMainCharacter(){
+        return mainCharacter;
     }
 
     public HashMap<CHARACTERNAME, WORLD> getNewCharacterLocations() {
